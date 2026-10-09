@@ -1,35 +1,25 @@
 import 'package:flutter/material.dart';
 
-// ============================================================================
-// ГЛАВНАЯ ТОЧКА ВХОДА В ПРИЛОЖЕНИЕ FLUTTER
-// ============================================================================
 void main() {
   runApp(const MyApp());
 }
 
-// ============================================================================
-// КОРНЕВОЙ ВИДЖЕТ ПРИЛОЖЕНИЯ
-// Устанавливает тему (Material 3), цветовую палитру и стартовый экран
-// ============================================================================
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // Название приложения для системы
       title: 'Практическая работа: Flutter UI',
-      // Отключаем плашку DEBUG в углу экрана
       debugShowCheckedModeBanner: false,
-      // Глобальная тема приложения
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF0077B6), // Фирменный синий цвет
+          seedColor: const Color(0xFF0077B6),
           primary: const Color(0xFF0077B6),
           secondary: const Color(0xFF00B4D8),
         ),
-        scaffoldBackgroundColor: const Color(0xFFF6F8FA), // Мягкий фон экрана
+        scaffoldBackgroundColor: const Color(0xFFF6F8FA),
         appBarTheme: const AppBarTheme(
           centerTitle: true,
           elevation: 0,
@@ -37,18 +27,11 @@ class MyApp extends StatelessWidget {
           foregroundColor: Colors.black87,
         ),
       ),
-      // Стартовый экран с вкладками
       home: const HomeScreen(),
     );
   }
 }
 
-// ============================================================================
-// 1. ГЛАВНЫЙ ЭКРАН С НАВИГАЦИЕЙ (HomeScreen)
-// Содержит BottomNavigationBar с двумя вкладками:
-//   - Вкладка 1: "Простые макеты" (Профиль и Авторизация)
-//   - Вкладка 2: "Сложные макеты" (Каталог товаров и Статья с комментариями)
-// ============================================================================
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -57,19 +40,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // Индекс активной вкладки (0 - простые макеты, 1 - сложные макеты)
   int _selectedTabIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    // Список двух основных страниц для переключения
     final List<Widget> tabPages = [
       const SimpleLayoutsMenu(),
       const ComplexLayoutsMenu(),
     ];
 
     return Scaffold(
-      // Верхняя панель AppBar
       appBar: AppBar(
         title: Text(
           _selectedTabIndex == 0
@@ -78,7 +58,6 @@ class _HomeScreenState extends State<HomeScreen> {
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
         ),
         actions: [
-          // Значок оценки работы
           Container(
             margin: const EdgeInsets.only(right: 16),
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -104,11 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-
-      // Текущая вкладка в теле Scaffold
       body: tabPages[_selectedTabIndex],
-
-      // Нижняя панель навигации (BottomNavigationBar)
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedTabIndex,
         onTap: (int index) {
@@ -137,9 +112,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// ============================================================================
-// МЕНЮ ВКЛАДКИ 1: ПРОСТЫЕ МАКЕТЫ
-// ============================================================================
 class SimpleLayoutsMenu extends StatelessWidget {
   const SimpleLayoutsMenu({super.key});
 
@@ -148,7 +120,6 @@ class SimpleLayoutsMenu extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16.0),
       children: [
-        // Информационная карточка
         Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
@@ -169,8 +140,6 @@ class SimpleLayoutsMenu extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-
-        // Карточка макета 1: Профиль пользователя
         Card(
           elevation: 2,
           shape: RoundedRectangleBorder(
@@ -244,8 +213,6 @@ class SimpleLayoutsMenu extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 14),
-
-        // Карточка макета 2: Экран авторизации
         Card(
           elevation: 2,
           shape: RoundedRectangleBorder(
@@ -323,9 +290,6 @@ class SimpleLayoutsMenu extends StatelessWidget {
   }
 }
 
-// ============================================================================
-// МЕНЮ ВКЛАДКИ 2: СЛОЖНЫЕ МАКЕТЫ
-// ============================================================================
 class ComplexLayoutsMenu extends StatelessWidget {
   const ComplexLayoutsMenu({super.key});
 
@@ -334,7 +298,6 @@ class ComplexLayoutsMenu extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16.0),
       children: [
-        // Информационная карточка
         Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
@@ -355,8 +318,6 @@ class ComplexLayoutsMenu extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-
-        // Карточка сложного макета 1: Интернет-магазин / Каталог
         Card(
           elevation: 2,
           shape: RoundedRectangleBorder(
@@ -430,8 +391,6 @@ class ComplexLayoutsMenu extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 14),
-
-        // Карточка сложного макета 2: Статья с отзывами
         Card(
           elevation: 2,
           shape: RoundedRectangleBorder(
@@ -509,15 +468,9 @@ class ComplexLayoutsMenu extends StatelessWidget {
   }
 }
 
-// ============================================================================
-// ----------------------------------------------------------------------------
-// ПРОСТОЙ МАКЕТ 1: ЭКРАН ПРОФИЛЯ ПОЛЬЗОВАТЕЛЯ
-// ----------------------------------------------------------------------------
-// ============================================================================
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
-  // Вспомогательный метод для колонки статистики
   Widget _buildStatColumn(String number, String label) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -539,7 +492,6 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Верхняя панель с кнопкой возврата
       appBar: AppBar(
         title: const Text('Профиль пользователя'),
         actions: [
@@ -549,13 +501,10 @@ class ProfileScreen extends StatelessWidget {
           ),
         ],
       ),
-
-      // Скроллируемая область для предотвращения переполнения экрана
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Карточка с основной информацией пользователя
             Card(
               elevation: 2,
               shape: RoundedRectangleBorder(
@@ -565,15 +514,12 @@ class ProfileScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
                   children: [
-                    // Аватарка пользователя (CircleAvatar)
                     const CircleAvatar(
                       radius: 46,
                       backgroundColor: Color(0xFF0077B6),
                       child: Icon(Icons.person, size: 50, color: Colors.white),
                     ),
                     const SizedBox(height: 14),
-
-                    // Имя пользователя
                     const Text(
                       'Алексей Смирнов',
                       style: TextStyle(
@@ -582,8 +528,6 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 4),
-
-                    // Статус / должность
                     const Text(
                       'Junior Flutter Developer',
                       style: TextStyle(
@@ -593,19 +537,14 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 10),
-
-                    // Краткое описание (био)
                     const Text(
                       'Изучаю мобильную разработку на Flutter. Практикую верстку интерфейсов по макетам Figma.',
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 13, color: Colors.black54),
                     ),
                     const SizedBox(height: 18),
-
-                    // Кнопки действий (Row)
                     Row(
                       children: [
-                        // Кнопка редактирования
                         Expanded(
                           child: ElevatedButton.icon(
                             onPressed: () {},
@@ -621,8 +560,6 @@ class ProfileScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 12),
-
-                        // Кнопка поделиться
                         Expanded(
                           child: OutlinedButton.icon(
                             onPressed: () {},
@@ -644,8 +581,6 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-
-            // Блок статистики (Row в Card)
             Card(
               elevation: 2,
               shape: RoundedRectangleBorder(
@@ -674,8 +609,6 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-
-            // Контактные данные (ListTile)
             Card(
               elevation: 2,
               shape: RoundedRectangleBorder(
@@ -725,8 +658,6 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-
-            // Секция навыков (Wrap с Chips)
             Card(
               elevation: 2,
               shape: RoundedRectangleBorder(
@@ -768,11 +699,6 @@ class ProfileScreen extends StatelessWidget {
   }
 }
 
-// ============================================================================
-// ----------------------------------------------------------------------------
-// ПРОСТОЙ МАКЕТ 2: ЭКРАН АВТОРИЗАЦИИ / ВХОДА
-// ----------------------------------------------------------------------------
-// ============================================================================
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -781,24 +707,18 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // Флаг видимости пароля
   bool _obscurePassword = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Верхняя панель
       appBar: AppBar(title: const Text('Вход в аккаунт')),
-
-      // Скроллируемая колонка
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 10),
-
-            // Логотип приложения (Container со скруглением и иконкой)
             Container(
               width: 80,
               height: 80,
@@ -813,22 +733,16 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             const SizedBox(height: 20),
-
-            // Заголовок формы
             const Text(
               'С возвращением!',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-
-            // Подзаголовок
             const Text(
               'Введите ваш email и пароль для входа',
               style: TextStyle(color: Colors.grey, fontSize: 14),
             ),
             const SizedBox(height: 32),
-
-            // 1. Поле ввода Email (TextField)
             TextField(
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
@@ -847,8 +761,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             const SizedBox(height: 16),
-
-            // 2. Поле ввода пароля (TextField)
             TextField(
               obscureText: _obscurePassword,
               decoration: InputDecoration(
@@ -879,8 +791,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             const SizedBox(height: 8),
-
-            // Ссылка "Забыли пароль?"
             Align(
               alignment: Alignment.centerRight,
               child: TextButton(
@@ -889,8 +799,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             const SizedBox(height: 16),
-
-            // Кнопка входа (ElevatedButton)
             SizedBox(
               width: double.infinity,
               height: 50,
@@ -914,8 +822,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             const SizedBox(height: 28),
-
-            // Разделитель "или войдите через"
             Row(
               children: [
                 Expanded(child: Divider(color: Colors.grey.shade300)),
@@ -930,8 +836,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ],
             ),
             const SizedBox(height: 20),
-
-            // Кнопки альтернативного входа (Row)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -976,8 +880,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ],
             ),
             const SizedBox(height: 30),
-
-            // Ссылка на регистрацию
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -998,11 +900,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
-// ============================================================================
-// ----------------------------------------------------------------------------
-// СЛОЖНЫЙ МАКЕТ 1: ЭКРАН ИНТЕРНЕТ-МАГАЗИНА / КАТАЛОГА ТОВАРОВ
-// ----------------------------------------------------------------------------
-// ============================================================================
 class CatalogScreen extends StatefulWidget {
   const CatalogScreen({super.key});
 
@@ -1011,7 +908,6 @@ class CatalogScreen extends StatefulWidget {
 }
 
 class _CatalogScreenState extends State<CatalogScreen> {
-  // Список категорий для горизонтального скролла
   final List<String> _categories = [
     'Все блюда',
     'Салаты',
@@ -1021,20 +917,16 @@ class _CatalogScreenState extends State<CatalogScreen> {
     'Десерты',
   ];
 
-  // Выбранная категория
   int _selectedCategoryIndex = 0;
 
-  // Количество товаров в корзине
   int _cartItemCount = 2;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Шапка каталога с корзиной
       appBar: AppBar(
         title: const Text('Каталог товаров'),
         actions: [
-          // Иконка корзины с бейджем количества
           Stack(
             alignment: Alignment.center,
             children: [
@@ -1066,14 +958,11 @@ class _CatalogScreenState extends State<CatalogScreen> {
           const SizedBox(width: 8),
         ],
       ),
-
-      // Тело каталога
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 1. Поисковая строка с кнопкой фильтра (Row + TextField)
             Row(
               children: [
                 Expanded(
@@ -1107,8 +996,6 @@ class _CatalogScreenState extends State<CatalogScreen> {
               ],
             ),
             const SizedBox(height: 18),
-
-            // 2. Рекламный баннер с градиентом
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(18),
@@ -1177,15 +1064,11 @@ class _CatalogScreenState extends State<CatalogScreen> {
               ),
             ),
             const SizedBox(height: 22),
-
-            // 3. Заголовок категорий
             const Text(
               'Категории',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
-
-            // Горизонтальный скролл категорий (SingleChildScrollView с scrollDirection.horizontal)
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -1199,9 +1082,8 @@ class _CatalogScreenState extends State<CatalogScreen> {
                       selectedColor: const Color(0xFF0077B6),
                       labelStyle: TextStyle(
                         color: isSelected ? Colors.white : Colors.black87,
-                        fontWeight: isSelected
-                            ? FontWeight.bold
-                            : FontWeight.normal,
+                        fontWeight:
+                            isSelected ? FontWeight.bold : FontWeight.normal,
                       ),
                       onSelected: (bool selected) {
                         setState(() {
@@ -1214,8 +1096,6 @@ class _CatalogScreenState extends State<CatalogScreen> {
               ),
             ),
             const SizedBox(height: 22),
-
-            // 4. Заголовок секции популярных товаров
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -1227,8 +1107,6 @@ class _CatalogScreenState extends State<CatalogScreen> {
               ],
             ),
             const SizedBox(height: 8),
-
-            // Карточки товаров
             _buildProductCard(
               title: 'Свежий салат Цезарь',
               description: 'Куриное филе, пармезан, салат романо, соус цезарь',
@@ -1268,7 +1146,6 @@ class _CatalogScreenState extends State<CatalogScreen> {
     );
   }
 
-  // Метод сборки карточки товара (Card + Row + Column)
   Widget _buildProductCard({
     required String title,
     required String description,
@@ -1285,7 +1162,6 @@ class _CatalogScreenState extends State<CatalogScreen> {
         padding: const EdgeInsets.all(12.0),
         child: Row(
           children: [
-            // Иконка-заглушка товара в цветном контейнере
             Container(
               width: 70,
               height: 70,
@@ -1296,8 +1172,6 @@ class _CatalogScreenState extends State<CatalogScreen> {
               child: Icon(icon, color: iconColor, size: 36),
             ),
             const SizedBox(width: 14),
-
-            // Описание и цена
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -1317,8 +1191,6 @@ class _CatalogScreenState extends State<CatalogScreen> {
                     style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
                   ),
                   const SizedBox(height: 8),
-
-                  // Рейтинг и кнопка покупки
                   Row(
                     children: [
                       const Icon(Icons.star, color: Colors.amber, size: 16),
@@ -1331,8 +1203,6 @@ class _CatalogScreenState extends State<CatalogScreen> {
                         ),
                       ),
                       const Spacer(),
-
-                      // Цена
                       Text(
                         price,
                         style: const TextStyle(
@@ -1342,8 +1212,6 @@ class _CatalogScreenState extends State<CatalogScreen> {
                         ),
                       ),
                       const SizedBox(width: 10),
-
-                      // Кнопка добавления в корзину
                       ElevatedButton(
                         onPressed: () {
                           setState(() {
@@ -1386,18 +1254,12 @@ class _CatalogScreenState extends State<CatalogScreen> {
   }
 }
 
-// ============================================================================
-// ----------------------------------------------------------------------------
-// СЛОЖНЫЙ МАКЕТ 2: ЭКРАН СТАТЬИ С КОММЕНТАРИЯМИ И ОТЗЫВАМИ
-// ----------------------------------------------------------------------------
-// ============================================================================
 class ArticleScreen extends StatelessWidget {
   const ArticleScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Верхняя панель
       appBar: AppBar(
         title: const Text('Статья и обсуждение'),
         actions: [
@@ -1408,13 +1270,10 @@ class ArticleScreen extends StatelessWidget {
           IconButton(icon: const Icon(Icons.share_outlined), onPressed: () {}),
         ],
       ),
-
-      // Скроллируемое тело статьи
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 1. Иллюстративный баннер статьи
             Container(
               height: 180,
               width: double.infinity,
@@ -1442,14 +1301,11 @@ class ArticleScreen extends StatelessWidget {
                 ],
               ),
             ),
-
-            // Контентная часть статьи
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Бейджи тегов (Row)
                   Wrap(
                     spacing: 8,
                     children: [
@@ -1460,8 +1316,6 @@ class ArticleScreen extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 14),
-
-                  // Заголовок статьи
                   const Text(
                     'Основы построения пользовательских интерфейсов на Flutter',
                     style: TextStyle(
@@ -1471,8 +1325,6 @@ class ArticleScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 14),
-
-                  // Автор и дата публикации (Row)
                   Row(
                     children: [
                       const CircleAvatar(
@@ -1519,8 +1371,6 @@ class ArticleScreen extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 18),
-
-                  // Текст статьи
                   const Text(
                     'Фреймворк Flutter предоставляет мощную декларативную модель разработки. Интерфейс создается путем композиции независимых виджетов: от простейших строк (Text) и отступов (Padding) до сложных списков (ListView).',
                     style: TextStyle(
@@ -1539,8 +1389,6 @@ class ArticleScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 18),
-
-                  // Блок статистики (Лайки, Просмотры, Комментарии)
                   Card(
                     elevation: 1,
                     shape: RoundedRectangleBorder(
@@ -1570,15 +1418,11 @@ class ArticleScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 24),
-
-                  // Заголовок раздела комментариев
                   const Text(
                     'Комментарии и отзывы (3)',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 14),
-
-                  // Список комментариев
                   _buildCommentCard(
                     author: 'Анна Соколова',
                     timeAgo: '2 часа назад',
@@ -1601,8 +1445,6 @@ class ArticleScreen extends StatelessWidget {
                         'Отличный наглядный пример реализации базовых виджетов Flutter.',
                   ),
                   const SizedBox(height: 16),
-
-                  // Поле для добавления нового отзыва/комментария
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 14),
                     decoration: BoxDecoration(
@@ -1649,7 +1491,6 @@ class ArticleScreen extends StatelessWidget {
     );
   }
 
-  // Метод сборки бейджа тега
   Widget _buildTagChip(String label) {
     return Container(
       margin: const EdgeInsets.only(bottom: 6),
@@ -1669,7 +1510,6 @@ class ArticleScreen extends StatelessWidget {
     );
   }
 
-  // Метод кнопки статистики
   Widget _buildStatButton(IconData icon, String count, Color color) {
     return Row(
       children: [
@@ -1683,7 +1523,6 @@ class ArticleScreen extends StatelessWidget {
     );
   }
 
-  // Карточка одного комментария
   Widget _buildCommentCard({
     required String author,
     required String timeAgo,
@@ -1721,16 +1560,14 @@ class ArticleScreen extends StatelessWidget {
                   ),
                 ),
                 const Spacer(),
-                // Звездочки оценки
                 Row(
                   children: List.generate(
                     5,
                     (index) => Icon(
                       Icons.star,
                       size: 14,
-                      color: index < rating
-                          ? Colors.amber
-                          : Colors.grey.shade300,
+                      color:
+                          index < rating ? Colors.amber : Colors.grey.shade300,
                     ),
                   ),
                 ),
