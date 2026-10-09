@@ -132,7 +132,7 @@ class SimpleLayoutsMenu extends StatelessWidget {
               SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  'Раздел 1: Базовые макеты. Изучены виджеты Column, Row, Container, CircleAvatar, TextField, ElevatedButton.',
+                  'Раздел 1: Базовые макеты (Профиль пользователя и Авторизация).',
                   style: TextStyle(fontSize: 13, color: Color(0xFF0369A1)),
                 ),
               ),
@@ -310,7 +310,7 @@ class ComplexLayoutsMenu extends StatelessWidget {
               SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  'Раздел 2: Сложные макеты. Изучены горизонтальный скролл, поиск с фильтрами, карточки товаров, списки отзывов и бейджи.',
+                  'Раздел 2: Сложные макеты (Каталог товаров и Статья с отзывами).',
                   style: TextStyle(fontSize: 13, color: Color(0xFF92400E)),
                 ),
               ),
@@ -428,7 +428,7 @@ class ComplexLayoutsMenu extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            'Баннер, теги, автор, форматированный текст, лайки и отзывы',
+                            'Баннер, теги, автор, текст, лайки и отзывы',
                             style: TextStyle(fontSize: 13, color: Colors.grey),
                           ),
                         ],
@@ -614,10 +614,10 @@ class ProfileScreen extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: Column(
+              child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
                     child: Text(
                       'Контактная информация',
@@ -627,8 +627,8 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const Divider(height: 1),
-                  const ListTile(
+                  Divider(height: 1),
+                  ListTile(
                     leading: Icon(
                       Icons.email_outlined,
                       color: Color(0xFF0077B6),
@@ -636,8 +636,8 @@ class ProfileScreen extends StatelessWidget {
                     title: Text('alex.dev@flutter.ru'),
                     subtitle: Text('Email'),
                   ),
-                  const Divider(height: 1),
-                  const ListTile(
+                  Divider(height: 1),
+                  ListTile(
                     leading: Icon(
                       Icons.phone_outlined,
                       color: Color(0xFF0077B6),
@@ -645,8 +645,8 @@ class ProfileScreen extends StatelessWidget {
                     title: Text('+7 (999) 123-45-67'),
                     subtitle: Text('Телефон'),
                   ),
-                  const Divider(height: 1),
-                  const ListTile(
+                  Divider(height: 1),
+                  ListTile(
                     leading: Icon(
                       Icons.location_on_outlined,
                       color: Color(0xFF0077B6),
@@ -663,23 +663,23 @@ class ProfileScreen extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
+              child: const Padding(
+                padding: EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'Ключевые навыки',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
                     Wrap(
                       spacing: 8,
                       runSpacing: 8,
-                      children: const [
+                      children: [
                         Chip(label: Text('Flutter')),
                         Chip(label: Text('Dart')),
                         Chip(label: Text('Widgets')),
@@ -699,15 +699,8 @@ class ProfileScreen extends StatelessWidget {
   }
 }
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
-
-  @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
-  bool _obscurePassword = true;
 
   @override
   Widget build(BuildContext context) {
@@ -762,23 +755,12 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 16),
             TextField(
-              obscureText: _obscurePassword,
+              obscureText: true,
               decoration: InputDecoration(
                 labelText: 'Пароль',
                 hintText: '••••••••',
                 prefixIcon: const Icon(Icons.lock_outline),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _obscurePassword
-                        ? Icons.visibility_off_outlined
-                        : Icons.visibility_outlined,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _obscurePassword = !_obscurePassword;
-                    });
-                  },
-                ),
+                suffixIcon: const Icon(Icons.visibility_off_outlined),
                 filled: true,
                 fillColor: Colors.white,
                 border: OutlineInputBorder(
@@ -803,11 +785,7 @@ class _LoginScreenState extends State<LoginScreen> {
               width: double.infinity,
               height: 50,
               child: ElevatedButton(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Вход выполнен успешно!')),
-                  );
-                },
+                onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF0077B6),
                   foregroundColor: Colors.white,
@@ -900,15 +878,10 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
-class CatalogScreen extends StatefulWidget {
+class CatalogScreen extends StatelessWidget {
   const CatalogScreen({super.key});
 
-  @override
-  State<CatalogScreen> createState() => _CatalogScreenState();
-}
-
-class _CatalogScreenState extends State<CatalogScreen> {
-  final List<String> _categories = [
+  final List<String> _categories = const [
     'Все блюда',
     'Салаты',
     'Пицца',
@@ -916,10 +889,6 @@ class _CatalogScreenState extends State<CatalogScreen> {
     'Напитки',
     'Десерты',
   ];
-
-  int _selectedCategoryIndex = 0;
-
-  int _cartItemCount = 2;
 
   @override
   Widget build(BuildContext context) {
@@ -943,9 +912,9 @@ class _CatalogScreenState extends State<CatalogScreen> {
                     color: Colors.redAccent,
                     shape: BoxShape.circle,
                   ),
-                  child: Text(
-                    '$_cartItemCount',
-                    style: const TextStyle(
+                  child: const Text(
+                    '2',
+                    style: TextStyle(
                       color: Colors.white,
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
@@ -1073,7 +1042,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: List.generate(_categories.length, (index) {
-                  final bool isSelected = _selectedCategoryIndex == index;
+                  final bool isSelected = index == 0;
                   return Padding(
                     padding: const EdgeInsets.only(right: 8.0),
                     child: ChoiceChip(
@@ -1085,11 +1054,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                         fontWeight:
                             isSelected ? FontWeight.bold : FontWeight.normal,
                       ),
-                      onSelected: (bool selected) {
-                        setState(() {
-                          _selectedCategoryIndex = index;
-                        });
-                      },
+                      onSelected: (_) {},
                     ),
                   );
                 }),
@@ -1213,17 +1178,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                       ),
                       const SizedBox(width: 10),
                       ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            _cartItemCount++;
-                          });
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('$title добавлен в корзину'),
-                              duration: const Duration(seconds: 1),
-                            ),
-                          );
-                        },
+                        onPressed: () {},
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF0077B6),
                           foregroundColor: Colors.white,
@@ -1267,7 +1222,10 @@ class ArticleScreen extends StatelessWidget {
             icon: const Icon(Icons.bookmark_outline),
             onPressed: () {},
           ),
-          IconButton(icon: const Icon(Icons.share_outlined), onPressed: () {}),
+          IconButton(
+            icon: const Icon(Icons.share_outlined),
+            onPressed: () {},
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -1470,13 +1428,7 @@ class ArticleScreen extends StatelessWidget {
                             Icons.send_rounded,
                             color: Color(0xFF0077B6),
                           ),
-                          onPressed: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Комментарий отправлен!'),
-                              ),
-                            );
-                          },
+                          onPressed: () {},
                         ),
                       ],
                     ),
