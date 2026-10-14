@@ -10,1534 +10,1613 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Практическая работа: Flutter UI',
+      title: 'Практическая работа: 4 макета UI',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF0077B6),
-          primary: const Color(0xFF0077B6),
-          secondary: const Color(0xFF00B4D8),
-        ),
-        scaffoldBackgroundColor: const Color(0xFFF6F8FA),
-        appBarTheme: const AppBarTheme(
-          centerTitle: true,
-          elevation: 0,
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black87,
-        ),
+        scaffoldBackgroundColor: const Color(0xFFE2E8F0),
+        fontFamily: 'Roboto',
       ),
-      home: const HomeScreen(),
+      home: const AllLayoutsShowcaseScreen(),
     );
   }
 }
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+/// Главный экран-витрина: размещает все 4 макета на одном экране
+class AllLayoutsShowcaseScreen extends StatefulWidget {
+  const AllLayoutsShowcaseScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<AllLayoutsShowcaseScreen> createState() => _AllLayoutsShowcaseScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  int _selectedTabIndex = 0;
+class _AllLayoutsShowcaseScreenState extends State<AllLayoutsShowcaseScreen> {
+  // 0 = Все 4 макета (в ряд / мульти-экран)
+  // 1 = 2 Простых макета (Medinow)
+  // 2 = 2 Сложных макета (E-Wallet + Organizer)
+  // 3 = Макет 1: Medinow Welcome
+  // 4 = Макет 2: Meditate Catalog
+  // 5 = Макет 3: E-Wallet
+  // 6 = Макет 4: Organizer
+  int _selectedFilter = 0;
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> tabPages = [
-      const SimpleLayoutsMenu(),
-      const ComplexLayoutsMenu(),
-    ];
-
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          _selectedTabIndex == 0
-              ? 'Простые макеты (2 шт.)'
-              : 'Сложные макеты (2 шт.)',
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+        elevation: 0,
+        backgroundColor: Colors.white,
+        title: const Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.devices_outlined, color: Color(0xFF0F172A), size: 20),
+            SizedBox(width: 8),
+            Flexible(
+              child: Text(
+                'Практическая работа: 4 макета UI',
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: Color(0xFF0F172A),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ],
         ),
         actions: [
           Container(
-            margin: const EdgeInsets.only(right: 16),
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: SegmentedButton<int>(
+                segments: const [
+                  ButtonSegment<int>(
+                    value: 0,
+                    label: Text('Все 4 макета'),
+                    icon: Icon(Icons.grid_view_rounded, size: 16),
+                  ),
+                  ButtonSegment<int>(
+                    value: 1,
+                    label: Text('2 Простых'),
+                    icon: Icon(Icons.spa_outlined, size: 16),
+                  ),
+                  ButtonSegment<int>(
+                    value: 2,
+                    label: Text('2 Сложных'),
+                    icon: Icon(Icons.credit_card_rounded, size: 16),
+                  ),
+                ],
+                selected: {_selectedFilter > 2 ? 0 : _selectedFilter},
+                onSelectionChanged: (Set<int> newSelection) {
+                  setState(() {
+                    _selectedFilter = newSelection.first;
+                  });
+                },
+                style: const ButtonStyle(
+                  visualDensity: VisualDensity.compact,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Container(
+            margin: const EdgeInsets.only(right: 16, top: 10, bottom: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
             decoration: BoxDecoration(
-              color: Colors.green.shade50,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.green.shade400),
+              color: const Color(0xFFDCFCE7),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: const Color(0xFF86EFAC)),
             ),
             child: const Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.stars, color: Colors.green, size: 16),
-                SizedBox(width: 4),
+                Icon(Icons.verified_rounded, color: Color(0xFF16A34A), size: 16),
+                SizedBox(width: 6),
                 Text(
                   'Оценка: 5',
                   style: TextStyle(
-                    color: Colors.green,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-      body: tabPages[_selectedTabIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedTabIndex,
-        onTap: (int index) {
-          setState(() {
-            _selectedTabIndex = index;
-          });
-        },
-        selectedItemColor: const Color(0xFF0077B6),
-        unselectedItemColor: Colors.grey,
-        backgroundColor: Colors.white,
-        elevation: 10,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.looks_one_outlined),
-            activeIcon: Icon(Icons.looks_one),
-            label: 'Простые макеты',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.looks_two_outlined),
-            activeIcon: Icon(Icons.looks_two),
-            label: 'Сложные макеты',
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class SimpleLayoutsMenu extends StatelessWidget {
-  const SimpleLayoutsMenu({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.all(16.0),
-      children: [
-        Container(
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            color: const Color(0xFFE0F2FE),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: const Row(
-            children: [
-              Icon(Icons.info_outline, color: Color(0xFF0288D1)),
-              SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  'Раздел 1: Базовые макеты (Профиль пользователя и Авторизация).',
-                  style: TextStyle(fontSize: 13, color: Color(0xFF0369A1)),
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 16),
-        Card(
-          elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.blue.shade50,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.person,
-                        color: Color(0xFF0077B6),
-                        size: 28,
-                      ),
-                    ),
-                    const SizedBox(width: 14),
-                    const Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Макет 1: Профиль пользователя',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            'Аватарка, имя, статус, статистика и кнопки',
-                            style: TextStyle(fontSize: 13, color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 14),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ProfileScreen(),
-                        ),
-                      );
-                    },
-                    icon: const Icon(Icons.open_in_new, size: 18),
-                    label: const Text('Открыть экран профиля'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF0077B6),
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 14),
-        Card(
-          elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.teal.shade50,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.lock_outline,
-                        color: Colors.teal,
-                        size: 28,
-                      ),
-                    ),
-                    const SizedBox(width: 14),
-                    const Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Макет 2: Экран авторизации',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            'Логотип, поля ввода логина/пароля, вход, соцсети',
-                            style: TextStyle(fontSize: 13, color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 14),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoginScreen(),
-                        ),
-                      );
-                    },
-                    icon: const Icon(Icons.open_in_new, size: 18),
-                    label: const Text('Открыть экран авторизации'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.teal,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class ComplexLayoutsMenu extends StatelessWidget {
-  const ComplexLayoutsMenu({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.all(16.0),
-      children: [
-        Container(
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            color: const Color(0xFFFEF3C7),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: const Row(
-            children: [
-              Icon(Icons.workspace_premium_outlined, color: Color(0xFFD97706)),
-              SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  'Раздел 2: Сложные макеты (Каталог товаров и Статья с отзывами).',
-                  style: TextStyle(fontSize: 13, color: Color(0xFF92400E)),
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 16),
-        Card(
-          elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.orange.shade50,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.storefront,
-                        color: Colors.orange,
-                        size: 28,
-                      ),
-                    ),
-                    const SizedBox(width: 14),
-                    const Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Макет 3: Каталог интернет-магазина',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            'Поиск, фильтры, горизонтальные категории, карточки с ценами',
-                            style: TextStyle(fontSize: 13, color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 14),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const CatalogScreen(),
-                        ),
-                      );
-                    },
-                    icon: const Icon(Icons.open_in_new, size: 18),
-                    label: const Text('Открыть каталог товаров'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.deepOrange,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 14),
-        Card(
-          elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.indigo.shade50,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.article_outlined,
-                        color: Colors.indigo,
-                        size: 28,
-                      ),
-                    ),
-                    const SizedBox(width: 14),
-                    const Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Макет 4: Статья и отзывы',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            'Баннер, теги, автор, текст, лайки и отзывы',
-                            style: TextStyle(fontSize: 13, color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 14),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ArticleScreen(),
-                        ),
-                      );
-                    },
-                    icon: const Icon(Icons.open_in_new, size: 18),
-                    label: const Text('Открыть статью с отзывами'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.indigo,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
-
-  Widget _buildStatColumn(String number, String label) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          number,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF0077B6),
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-      ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Профиль пользователя'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings_outlined),
-            onPressed: () {},
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Card(
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  children: [
-                    const CircleAvatar(
-                      radius: 46,
-                      backgroundColor: Color(0xFF0077B6),
-                      child: Icon(Icons.person, size: 50, color: Colors.white),
-                    ),
-                    const SizedBox(height: 14),
-                    const Text(
-                      'Алексей Смирнов',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    const Text(
-                      'Junior Flutter Developer',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.blueGrey,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    const Text(
-                      'Изучаю мобильную разработку на Flutter. Практикую верстку интерфейсов по макетам Figma.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 13, color: Colors.black54),
-                    ),
-                    const SizedBox(height: 18),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ElevatedButton.icon(
-                            onPressed: () {},
-                            icon: const Icon(Icons.edit, size: 16),
-                            label: const Text('Изменить'),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF0077B6),
-                              foregroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: OutlinedButton.icon(
-                            onPressed: () {},
-                            icon: const Icon(Icons.share, size: 16),
-                            label: const Text('Поделиться'),
-                            style: OutlinedButton.styleFrom(
-                              foregroundColor: const Color(0xFF0077B6),
-                              side: const BorderSide(color: Color(0xFF0077B6)),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Card(
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildStatColumn('14', 'Проектов'),
-                    Container(
-                      height: 28,
-                      width: 1,
-                      color: Colors.grey.shade300,
-                    ),
-                    _buildStatColumn('2.4k', 'Подписчиков'),
-                    Container(
-                      height: 28,
-                      width: 1,
-                      color: Colors.grey.shade300,
-                    ),
-                    _buildStatColumn('348', 'Подписок'),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Card(
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
-                    child: Text(
-                      'Контактная информация',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Divider(height: 1),
-                  ListTile(
-                    leading: Icon(
-                      Icons.email_outlined,
-                      color: Color(0xFF0077B6),
-                    ),
-                    title: Text('alex.dev@flutter.ru'),
-                    subtitle: Text('Email'),
-                  ),
-                  Divider(height: 1),
-                  ListTile(
-                    leading: Icon(
-                      Icons.phone_outlined,
-                      color: Color(0xFF0077B6),
-                    ),
-                    title: Text('+7 (999) 123-45-67'),
-                    subtitle: Text('Телефон'),
-                  ),
-                  Divider(height: 1),
-                  ListTile(
-                    leading: Icon(
-                      Icons.location_on_outlined,
-                      color: Color(0xFF0077B6),
-                    ),
-                    title: Text('Москва, Россия'),
-                    subtitle: Text('Город проживания'),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-            Card(
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: const Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Ключевые навыки',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 12),
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: [
-                        Chip(label: Text('Flutter')),
-                        Chip(label: Text('Dart')),
-                        Chip(label: Text('Widgets')),
-                        Chip(label: Text('UI Design')),
-                        Chip(label: Text('Figma')),
-                        Chip(label: Text('Git')),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Вход в аккаунт')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 10),
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                color: const Color(0xFFE0F2FE),
-                borderRadius: BorderRadius.circular(24),
-              ),
-              child: const Icon(
-                Icons.lock_person_outlined,
-                size: 42,
-                color: Color(0xFF0077B6),
-              ),
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              'С возвращением!',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Введите ваш email и пароль для входа',
-              style: TextStyle(color: Colors.grey, fontSize: 14),
-            ),
-            const SizedBox(height: 32),
-            TextField(
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
-                labelText: 'Электронная почта',
-                hintText: 'user@example.com',
-                prefixIcon: const Icon(Icons.email_outlined),
-                filled: true,
-                fillColor: Colors.white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: Colors.grey.shade300),
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: 'Пароль',
-                hintText: '••••••••',
-                prefixIcon: const Icon(Icons.lock_outline),
-                suffixIcon: const Icon(Icons.visibility_off_outlined),
-                filled: true,
-                fillColor: Colors.white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: Colors.grey.shade300),
-                ),
-              ),
-            ),
-            const SizedBox(height: 8),
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton(
-                onPressed: () {},
-                child: const Text('Забыли пароль?'),
-              ),
-            ),
-            const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF0077B6),
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: const Text(
-                  'Войти',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-            const SizedBox(height: 28),
-            Row(
-              children: [
-                Expanded(child: Divider(color: Colors.grey.shade300)),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 14),
-                  child: Text(
-                    'или войдите через',
-                    style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
-                  ),
-                ),
-                Expanded(child: Divider(color: Colors.grey.shade300)),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                OutlinedButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.g_mobiledata,
-                    size: 28,
-                    color: Colors.red,
-                  ),
-                  label: const Text('Google'),
-                  style: OutlinedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-                OutlinedButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.apple, size: 22, color: Colors.black),
-                  label: const Text('Apple'),
-                  style: OutlinedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-                OutlinedButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.phone_android,
-                    size: 20,
-                    color: Colors.blue,
-                  ),
-                  label: const Text('Телефон'),
-                  style: OutlinedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 30),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('Нет аккаунта?'),
-                TextButton(
-                  onPressed: () {},
-                  child: const Text(
-                    'Зарегистрироваться',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class CatalogScreen extends StatelessWidget {
-  const CatalogScreen({super.key});
-
-  final List<String> _categories = const [
-    'Все блюда',
-    'Салаты',
-    'Пицца',
-    'Паста',
-    'Напитки',
-    'Десерты',
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Каталог товаров'),
-        actions: [
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.shopping_bag_outlined),
-                onPressed: () {},
-              ),
-              Positioned(
-                right: 8,
-                top: 8,
-                child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: const BoxDecoration(
-                    color: Colors.redAccent,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Text(
-                    '2',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(width: 8),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Поиск блюд и продуктов...',
-                      prefixIcon: const Icon(Icons.search),
-                      filled: true,
-                      fillColor: Colors.white,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 0),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Container(
-                  height: 48,
-                  width: 48,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF0077B6),
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: IconButton(
-                    icon: const Icon(Icons.tune, color: Colors.white),
-                    onPressed: () {},
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 18),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(18),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF0077B6), Color(0xFF00B4D8)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(18),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.blue.withValues(alpha: 0.2),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.2),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: const Text(
-                            'СКИДКА 20%',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 11,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        const Text(
-                          'Быстрая доставка еды!',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        const Text(
-                          'Промокод: FLUTTER2026',
-                          style: TextStyle(color: Colors.white70, fontSize: 12),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Icon(
-                    Icons.fastfood_rounded,
-                    size: 60,
-                    color: Colors.white,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 22),
-            const Text(
-              'Категории',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: List.generate(_categories.length, (index) {
-                  final bool isSelected = index == 0;
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: ChoiceChip(
-                      label: Text(_categories[index]),
-                      selected: isSelected,
-                      selectedColor: const Color(0xFF0077B6),
-                      labelStyle: TextStyle(
-                        color: isSelected ? Colors.white : Colors.black87,
-                        fontWeight:
-                            isSelected ? FontWeight.bold : FontWeight.normal,
-                      ),
-                      onSelected: (_) {},
-                    ),
-                  );
-                }),
-              ),
-            ),
-            const SizedBox(height: 22),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Популярные блюда',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                TextButton(onPressed: () {}, child: const Text('Смотреть все')),
-              ],
-            ),
-            const SizedBox(height: 8),
-            _buildProductCard(
-              title: 'Свежий салат Цезарь',
-              description: 'Куриное филе, пармезан, салат романо, соус цезарь',
-              price: '420 ₽',
-              rating: '4.9',
-              icon: Icons.restaurant,
-              iconColor: Colors.green,
-            ),
-            _buildProductCard(
-              title: 'Пицца Четыре Сыра',
-              description: 'Моцарелла, дорблю, пармезан, чеддер, томатный соус',
-              price: '680 ₽',
-              rating: '4.8',
-              icon: Icons.local_pizza_rounded,
-              iconColor: Colors.deepOrange,
-            ),
-            _buildProductCard(
-              title: 'Паста с морепродуктами',
-              description:
-                  'Феттучини, тигровые креветки, кальмары, сливочный соус',
-              price: '590 ₽',
-              rating: '4.9',
-              icon: Icons.dinner_dining_rounded,
-              iconColor: Colors.blueAccent,
-            ),
-            _buildProductCard(
-              title: 'Ягодный смузи',
-              description: 'Клубника, малина, банан, миндальное молоко, мята',
-              price: '280 ₽',
-              rating: '4.7',
-              icon: Icons.local_cafe_rounded,
-              iconColor: Colors.purple,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildProductCard({
-    required String title,
-    required String description,
-    required String price,
-    required String rating,
-    required IconData icon,
-    required Color iconColor,
-  }) {
-    return Card(
-      elevation: 2,
-      margin: const EdgeInsets.only(bottom: 12),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Row(
-          children: [
-            Container(
-              width: 70,
-              height: 70,
-              decoration: BoxDecoration(
-                color: iconColor.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(14),
-              ),
-              child: Icon(icon, color: iconColor, size: 36),
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    description,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      const Icon(Icons.star, color: Colors.amber, size: 16),
-                      const SizedBox(width: 4),
-                      Text(
-                        rating,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const Spacer(),
-                      Text(
-                        price,
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF0077B6),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF0077B6),
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 6,
-                          ),
-                          minimumSize: Size.zero,
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        child: const Text(
-                          'Купить',
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class ArticleScreen extends StatelessWidget {
-  const ArticleScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Статья и обсуждение'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.bookmark_outline),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.share_outlined),
-            onPressed: () {},
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 180,
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Color(0xFF03045E), Color(0xFF0077B6)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-              ),
-              child: const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.flutter_dash, size: 70, color: Colors.white),
-                  SizedBox(height: 10),
-                  Text(
-                    'FLUTTER UI DESIGN GUIDE',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      letterSpacing: 2.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Wrap(
-                    spacing: 8,
-                    children: [
-                      _buildTagChip('#Flutter'),
-                      _buildTagChip('#Dart'),
-                      _buildTagChip('#MobileDevelopment'),
-                      _buildTagChip('#UI/UX'),
-                    ],
-                  ),
-                  const SizedBox(height: 14),
-                  const Text(
-                    'Основы построения пользовательских интерфейсов на Flutter',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      height: 1.3,
-                    ),
-                  ),
-                  const SizedBox(height: 14),
-                  Row(
-                    children: [
-                      const CircleAvatar(
-                        radius: 20,
-                        backgroundColor: Color(0xFF0077B6),
-                        child: Text(
-                          'МИ',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Михаил Иванов',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                            ),
-                          ),
-                          Text(
-                            'Опубликовано сегодня • 5 мин чтения',
-                            style: TextStyle(color: Colors.grey, fontSize: 12),
-                          ),
-                        ],
-                      ),
-                      const Spacer(),
-                      OutlinedButton(
-                        onPressed: () {},
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 4,
-                          ),
-                          minimumSize: Size.zero,
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        ),
-                        child: const Text('Подписаться'),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 18),
-                  const Text(
-                    'Фреймворк Flutter предоставляет мощную декларативную модель разработки. Интерфейс создается путем композиции независимых виджетов: от простейших строк (Text) и отступов (Padding) до сложных списков (ListView).',
-                    style: TextStyle(
-                      fontSize: 14,
-                      height: 1.6,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  const Text(
-                    'В рамках данной практической работы были исследованы и применены такие базовые элементы, как Scaffold, Column, Row, Container, Card и SingleChildScrollView. Это позволило воссоздать структуру профессиональных дизайн-макетов из Figma.',
-                    style: TextStyle(
-                      fontSize: 14,
-                      height: 1.6,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  const SizedBox(height: 18),
-                  Card(
-                    elevation: 1,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 12,
-                        horizontal: 16,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          _buildStatButton(Icons.favorite, '328', Colors.red),
-                          _buildStatButton(
-                            Icons.visibility_outlined,
-                            '2.1k',
-                            Colors.blueGrey,
-                          ),
-                          _buildStatButton(
-                            Icons.chat_bubble_outline,
-                            '3',
-                            Colors.blueGrey,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  const Text(
-                    'Комментарии и отзывы (3)',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 14),
-                  _buildCommentCard(
-                    author: 'Анна Соколова',
-                    timeAgo: '2 часа назад',
-                    rating: 5,
-                    comment:
-                        'Отличная верстка! Очень понятный код и аккуратная структура компонентов.',
-                  ),
-                  _buildCommentCard(
-                    author: 'Дмитрий Кузнецов',
-                    timeAgo: '4 часа назад',
-                    rating: 5,
-                    comment:
-                        'Все требования соблюдены. Особенно понравилась адаптивность под разные размеры экрана.',
-                  ),
-                  _buildCommentCard(
-                    author: 'Елена Васильева',
-                    timeAgo: 'Вчера',
-                    rating: 4,
-                    comment:
-                        'Отличный наглядный пример реализации базовых виджетов Flutter.',
-                  ),
-                  const SizedBox(height: 16),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(26),
-                      border: Border.all(color: Colors.grey.shade300),
-                    ),
-                    child: Row(
-                      children: [
-                        const Expanded(
-                          child: TextField(
-                            decoration: InputDecoration(
-                              hintText: 'Оставить свой отзыв...',
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.symmetric(
-                                vertical: 12,
-                              ),
-                            ),
-                          ),
-                        ),
-                        IconButton(
-                          icon: const Icon(
-                            Icons.send_rounded,
-                            color: Color(0xFF0077B6),
-                          ),
-                          onPressed: () {},
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTagChip(String label) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 6),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: const Color(0xFFE0F2FE),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Text(
-        label,
-        style: const TextStyle(
-          color: Color(0xFF0288D1),
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildStatButton(IconData icon, String count, Color color) {
-    return Row(
-      children: [
-        Icon(icon, color: color, size: 20),
-        const SizedBox(width: 6),
-        Text(
-          count,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildCommentCard({
-    required String author,
-    required String timeAgo,
-    required int rating,
-    required String comment,
-  }) {
-    return Card(
-      elevation: 1,
-      margin: const EdgeInsets.only(bottom: 10),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  radius: 14,
-                  backgroundColor: Colors.blue.shade100,
-                  child: Text(
-                    author.isNotEmpty ? author[0] : '?',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Color(0xFF0077B6),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  author,
-                  style: const TextStyle(
+                    color: Color(0xFF16A34A),
                     fontWeight: FontWeight.bold,
                     fontSize: 13,
                   ),
                 ),
-                const Spacer(),
-                Row(
-                  children: List.generate(
-                    5,
-                    (index) => Icon(
-                      Icons.star,
-                      size: 14,
-                      color:
-                          index < rating ? Colors.amber : Colors.grey.shade300,
+              ],
+            ),
+          ),
+        ],
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: _buildBody(),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBody() {
+    // 4 смартфона
+    final m1 = _buildMockupCard(
+      badge: 'Простой макет 1',
+      title: 'Medinow • Приветствие',
+      badgeColor: const Color(0xFF00796B),
+      child: const MedinowWelcomeMockup(),
+    );
+
+    final m2 = _buildMockupCard(
+      badge: 'Простой макет 2',
+      title: 'Meditate • Каталог сессий',
+      badgeColor: const Color(0xFF028174),
+      child: const MeditateCatalogMockup(),
+    );
+
+    final m3 = _buildMockupCard(
+      badge: 'Сложный макет 1',
+      title: 'My E-Wallet • Кошелек и карта',
+      badgeColor: const Color(0xFF1E1F22),
+      child: const EWalletMockup(),
+    );
+
+    final m4 = _buildMockupCard(
+      badge: 'Сложный макет 2',
+      title: 'Organizer • Профиль организатора',
+      badgeColor: const Color(0xFF4361EE),
+      child: const OrganizerProfileMockup(),
+    );
+
+    List<Widget> activeList;
+    if (_selectedFilter == 1) {
+      activeList = [m1, m2];
+    } else if (_selectedFilter == 2) {
+      activeList = [m3, m4];
+    } else {
+      activeList = [m1, m2, m3, m4];
+    }
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final bool canFitRow = constraints.maxWidth >= (activeList.length * 320);
+
+        if (canFitRow) {
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: activeList.map((card) => Expanded(child: card)).toList(),
+          );
+        } else {
+          return SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: activeList.map((card) {
+                return SizedBox(
+                  width: 360,
+                  height: constraints.maxHeight,
+                  child: card,
+                );
+              }).toList(),
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  Widget _buildMockupCard({
+    required String badge,
+    required String title,
+    required Color badgeColor,
+    required Widget child,
+  }) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Заголовок фрейма
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8.0, left: 4, right: 4),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: badgeColor,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    badge,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF334155),
                     ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 6),
-            Text(
-              comment,
-              style: const TextStyle(fontSize: 13, color: Colors.black87),
+          ),
+          // Телефонный корпус
+          Expanded(
+            child: _PhoneDeviceFrame(child: child),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Рамка смартфона со статус-баром и закругленными углами
+class _PhoneDeviceFrame extends StatelessWidget {
+  final Widget child;
+
+  const _PhoneDeviceFrame({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.black,
+        borderRadius: BorderRadius.circular(36),
+        border: Border.all(color: const Color(0xFF0F172A), width: 7),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x22000000),
+            blurRadius: 18,
+            offset: Offset(0, 10),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(28),
+        child: child,
+      ),
+    );
+  }
+}
+
+// ==============================================================================
+// 1. ПРОСТОЙ МАКЕТ 1: MEDINOW WELCOME SCREEN (ЗЕЛЕНЫЙ ЭКРАН ВХОДА)
+// ==============================================================================
+class MedinowWelcomeMockup extends StatelessWidget {
+  const MedinowWelcomeMockup({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    const tealBg = Color(0xFF00796B);
+
+    return Scaffold(
+      backgroundColor: tealBg,
+      body: SafeArea(
+        child: Stack(
+          children: [
+            // Иллюстрация медитации в нижней части экрана
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              height: 250,
+              child: CustomPaint(
+                painter: _MedinowYogiPainter(),
+              ),
             ),
-            const SizedBox(height: 4),
-            Text(
-              timeAgo,
-              style: TextStyle(fontSize: 11, color: Colors.grey.shade500),
+            // Контентная часть (логотип + кнопки)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: Column(
+                children: [
+                  const SizedBox(height: 12),
+                  // Верхний статус-бар
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '9:41',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Icon(Icons.signal_cellular_alt, color: Colors.white, size: 16),
+                          SizedBox(width: 4),
+                          Icon(Icons.wifi, color: Colors.white, size: 16),
+                          SizedBox(width: 4),
+                          Icon(Icons.battery_full, color: Colors.white, size: 16),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 50),
+                  // Логотип
+                  const Text(
+                    'medinow',
+                    style: TextStyle(
+                      fontSize: 38,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  const Text(
+                    'Meditate With Us!',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white70,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                  // Кнопка 1: Sign in with Apple
+                  SizedBox(
+                    width: double.infinity,
+                    height: 48,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.black87,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                      ),
+                      child: const Text(
+                        'Sign in with Apple',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  // Кнопка 2: Continue with Email or Phone
+                  SizedBox(
+                    width: double.infinity,
+                    height: 48,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFC7F3EC),
+                        foregroundColor: Colors.black87,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                      ),
+                      child: const Text(
+                        'Continue with Email or Phone',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  // Ссылка 3: Continue With Google
+                  TextButton(
+                    onPressed: () {},
+                    child: const Text(
+                      'Continue With Google',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Художественная векторная отрисовка йога и растений без внешних ассетов
+class _MedinowYogiPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final leafPaint = Paint()..color = const Color(0xFF4DB6AC).withValues(alpha: 0.45);
+    final darkLeafPaint = Paint()..color = const Color(0xFF26A69A).withValues(alpha: 0.6);
+    final matPaint = Paint()..color = const Color(0xFF004D40);
+
+    // Растения сзади
+    canvas.drawOval(
+      Rect.fromCenter(center: Offset(size.width * 0.2, size.height * 0.6), width: 90, height: 180),
+      leafPaint,
+    );
+    canvas.drawOval(
+      Rect.fromCenter(center: Offset(size.width * 0.8, size.height * 0.5), width: 110, height: 210),
+      leafPaint,
+    );
+    canvas.drawOval(
+      Rect.fromCenter(center: Offset(size.width * 0.72, size.height * 0.65), width: 80, height: 160),
+      darkLeafPaint,
+    );
+    canvas.drawOval(
+      Rect.fromCenter(center: Offset(size.width * 0.3, size.height * 0.7), width: 70, height: 150),
+      darkLeafPaint,
+    );
+
+    // Коврик
+    final matPath = Path()
+      ..moveTo(size.width * 0.08, size.height * 0.88)
+      ..lineTo(size.width * 0.92, size.height * 0.88)
+      ..lineTo(size.width * 0.84, size.height * 0.98)
+      ..lineTo(size.width * 0.16, size.height * 0.98)
+      ..close();
+    canvas.drawPath(matPath, matPaint);
+
+    // Фигура медитирующего человека
+    final centerX = size.width * 0.5;
+    final baseY = size.height * 0.76;
+
+    // Ноги (скрещенные)
+    final pantsPaint = Paint()..color = const Color(0xFF1E293B);
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        Rect.fromCenter(center: Offset(centerX, baseY + 18), width: 150, height: 26),
+        const Radius.circular(13),
+      ),
+      pantsPaint,
+    );
+
+    // Торс (белая майка)
+    final bodyPaint = Paint()..color = Colors.white;
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        Rect.fromCenter(center: Offset(centerX, baseY - 20), width: 68, height: 60),
+        const Radius.circular(18),
+      ),
+      bodyPaint,
+    );
+
+    // Шея и голова
+    final skinPaint = Paint()..color = const Color(0xFFFFD1BA);
+    canvas.drawRect(
+      Rect.fromCenter(center: Offset(centerX, baseY - 56), width: 18, height: 18),
+      skinPaint,
+    );
+    canvas.drawCircle(Offset(centerX, baseY - 74), 22, skinPaint);
+
+    // Волосы
+    final hairPaint = Paint()..color = const Color(0xFF1E293B);
+    canvas.drawArc(
+      Rect.fromCircle(center: Offset(centerX, baseY - 78), radius: 24),
+      3.14,
+      3.14,
+      true,
+      hairPaint,
+    );
+
+    // Сложенные в намасте руки
+    final armPath = Path()
+      ..moveTo(centerX - 30, baseY - 35)
+      ..lineTo(centerX, baseY - 15)
+      ..lineTo(centerX + 30, baseY - 35);
+    final armPaint = Paint()
+      ..color = const Color(0xFFFFD1BA)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 7
+      ..strokeCap = StrokeCap.round;
+    canvas.drawPath(armPath, armPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+// ==============================================================================
+// 2. ПРОСТОЙ МАКЕТ 2: MEDITATE CATALOG SCREEN (КАТАЛОГ СЕССИЙ)
+// ==============================================================================
+class MeditateCatalogMockup extends StatelessWidget {
+  const MeditateCatalogMockup({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Верхний статус-бар
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '9:41',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                  ),
+                  Row(
+                    children: [
+                      Icon(Icons.signal_cellular_alt, size: 15),
+                      SizedBox(width: 4),
+                      Icon(Icons.wifi, size: 15),
+                      SizedBox(width: 4),
+                      Icon(Icons.battery_full, size: 15),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 14),
+
+              // Заголовок и поиск
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Meditate',
+                    style: TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.search, size: 26, color: Colors.black87),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+
+              // Категории (горизонтальный скролл чипов)
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    _buildCategoryPill('All', isSelected: true),
+                    _buildCategoryPill('Bible In a Year', isSelected: false),
+                    _buildCategoryPill('Dailies', isSelected: false),
+                    _buildCategoryPill('Minutes', isSelected: false),
+                    _buildCategoryPill('November', isSelected: false),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Главный большой баннер: A Song of Moon
+              _buildBigBannerCard(),
+              const SizedBox(height: 16),
+
+              // Сетка 2x2 карточек
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildSmallSessionCard(
+                      title: 'The Sleep Hour',
+                      author: 'Ashna Mukherjee',
+                      footer: '3 Sessions',
+                      cardColor: const Color(0xFFF68758),
+                      icon: Icons.wb_sunny_rounded,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _buildSmallSessionCard(
+                      title: 'Easy on the Mission',
+                      author: 'Peter Mach',
+                      footer: '5 minutes',
+                      cardColor: const Color(0xFFE4BD54),
+                      icon: Icons.nightlight_round,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildSmallSessionCard(
+                      title: 'Relax with Me',
+                      author: 'Amanda James',
+                      footer: '3 Sessions',
+                      cardColor: const Color(0xFF3B82F6),
+                      icon: Icons.brightness_7_rounded,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _buildSmallSessionCard(
+                      title: 'Sun and Energy',
+                      author: 'Micheal Hiu',
+                      footer: '5 minutes',
+                      cardColor: const Color(0xFF0D9488),
+                      icon: Icons.flare_rounded,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCategoryPill(String title, {required bool isSelected}) {
+    return Container(
+      margin: const EdgeInsets.only(right: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      decoration: BoxDecoration(
+        color: isSelected ? const Color(0xFF00897B) : const Color(0xFFE0F2F1),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        title,
+        style: TextStyle(
+          color: isSelected ? Colors.white : const Color(0xFF00897B),
+          fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+          fontSize: 13,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBigBannerCard() {
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFD066),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Иллюстрация солнца и месяца
+          Container(
+            height: 110,
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            ),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Positioned(
+                  left: 60,
+                  child: Container(
+                    width: 75,
+                    height: 75,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFF87171),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(Icons.wb_sunny, color: Color(0xFFFEF08A), size: 45),
+                  ),
+                ),
+                Positioned(
+                  right: 70,
+                  child: Container(
+                    width: 60,
+                    height: 60,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF1E293B),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(Icons.nightlight_round, color: Color(0xFFFDE68A), size: 36),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Текстовая плашка
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(14),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'A Song of Moon',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 3),
+                const Text(
+                  'Start with the basics',
+                  style: TextStyle(fontSize: 12, color: Colors.black54),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Row(
+                      children: [
+                        Icon(Icons.favorite_border, size: 14, color: Colors.black45),
+                        SizedBox(width: 4),
+                        Text(
+                          '9 Sessions',
+                          style: TextStyle(fontSize: 11, color: Colors.black54),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: const [
+                        Text(
+                          'Start',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        Icon(Icons.chevron_right, size: 16, color: Colors.black87),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSmallSessionCard({
+    required String title,
+    required String author,
+    required String footer,
+    required Color cardColor,
+    required IconData icon,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x0D000000),
+            blurRadius: 8,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Шапка карточки с цветом
+          Container(
+            height: 75,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: cardColor,
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+            ),
+            child: Center(
+              child: Icon(icon, color: Colors.white.withValues(alpha: 0.9), size: 36),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  author,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 11, color: Colors.black54),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(Icons.favorite_border, size: 12, color: Colors.black45),
+                        const SizedBox(width: 3),
+                        Text(
+                          footer,
+                          style: const TextStyle(fontSize: 10, color: Colors.black54),
+                        ),
+                      ],
+                    ),
+                    const Row(
+                      children: [
+                        Text(
+                          'Start',
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        Icon(Icons.chevron_right, size: 14, color: Colors.black87),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ==============================================================================
+// 3. СЛОЖНЫЙ МАКЕТ 1: MY E-WALLET SCREEN (КОШЕЛЕК И ИСТОРИЯ ОПЕРАЦИЙ)
+// ==============================================================================
+class EWalletMockup extends StatelessWidget {
+  const EWalletMockup({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Верхний статус-бар
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '9:41',
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                        ),
+                        Row(
+                          children: [
+                            Icon(Icons.signal_cellular_alt, size: 15),
+                            SizedBox(width: 4),
+                            Icon(Icons.wifi, size: 15),
+                            SizedBox(width: 4),
+                            Icon(Icons.battery_full, size: 15),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+
+                    // Шапка экрана: Логотип, Заголовок, Поиск, Еще
+                    Row(
+                      children: [
+                        const Icon(Icons.wallet_outlined, size: 24, color: Colors.black87),
+                        const SizedBox(width: 8),
+                        const Text(
+                          'My E-Wallet',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        const Spacer(),
+                        IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.search, size: 22, color: Colors.black87),
+                          visualDensity: VisualDensity.compact,
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black26),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(Icons.more_horiz, size: 16, color: Colors.black87),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 14),
+
+                    // Кредитная карточка Andrew Ainsley
+                    _buildCreditCard(),
+                    const SizedBox(height: 18),
+
+                    // Раздел Transaction History
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Transaction History',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {},
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            minimumSize: Size.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          child: const Text(
+                            'See All',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+
+                    // Список транзакций
+                    _buildTransactionItem(
+                      icon: Icons.chair_rounded,
+                      iconBg: const Color(0xFFEFF6FF),
+                      iconColor: const Color(0xFF2563EB),
+                      title: 'Lawson Chair',
+                      date: 'Dec 15, 2024 | 10:00 AM',
+                      amount: '\$120',
+                      tag: 'Orders',
+                      isOrder: true,
+                    ),
+                    _buildTransactionItem(
+                      icon: Icons.account_balance_wallet_rounded,
+                      iconBg: const Color(0xFF1E293B),
+                      iconColor: Colors.white,
+                      title: 'Top Up Wallet',
+                      date: 'Dec 14, 2024 | 16:42 PM',
+                      amount: '\$400',
+                      tag: 'Top Up',
+                      isOrder: false,
+                    ),
+                    _buildTransactionItem(
+                      icon: Icons.light_outlined,
+                      iconBg: const Color(0xFFFFF7ED),
+                      iconColor: const Color(0xFFEA580C),
+                      title: 'Parabolic Reflector',
+                      date: 'Dec 14, 2024 | 11:39 AM',
+                      amount: '\$170',
+                      tag: 'Orders',
+                      isOrder: true,
+                    ),
+                    _buildTransactionItem(
+                      icon: Icons.table_restaurant_rounded,
+                      iconBg: const Color(0xFFFEFCE8),
+                      iconColor: const Color(0xFFCA8A04),
+                      title: 'Mini Wooden Table',
+                      date: 'Dec 13, 2024 | 14:46 PM',
+                      amount: '\$165',
+                      tag: 'Orders',
+                      isOrder: true,
+                    ),
+                    _buildTransactionItem(
+                      icon: Icons.account_balance_wallet_rounded,
+                      iconBg: const Color(0xFF1E293B),
+                      iconColor: Colors.white,
+                      title: 'Top Up Wallet',
+                      date: 'Dec 12, 2024 | 09:27 AM',
+                      amount: '\$300',
+                      tag: 'Top Up',
+                      isOrder: false,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            // Нижняя навигационная панель
+            _buildBottomNav(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCreditCard() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1A1A1A),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x33000000),
+            blurRadius: 16,
+            offset: Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Имя, номер карты и логотипы платежных систем
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    'Andrew Ainsley',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
+                  ),
+                  SizedBox(height: 2),
+                  Text(
+                    '•••• •••• •••• 3629',
+                    style: TextStyle(
+                      color: Colors.white60,
+                      fontSize: 11,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  const Text(
+                    'VISA',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w900,
+                      fontStyle: FontStyle.italic,
+                      fontSize: 16,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  // Mastercard перекрывающиеся круги
+                  SizedBox(
+                    width: 32,
+                    height: 20,
+                    child: Stack(
+                      children: [
+                        Container(
+                          width: 20,
+                          height: 20,
+                          decoration: const BoxDecoration(
+                            color: Color(0xFFEB001B),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        Positioned(
+                          right: 0,
+                          child: Container(
+                            width: 20,
+                            height: 20,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF79E1B).withValues(alpha: 0.85),
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+
+          // Баланс и кнопка Top Up
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    'Your balance',
+                    style: TextStyle(color: Colors.white60, fontSize: 11),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    '\$9,379',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 28,
+                    ),
+                  ),
+                ],
+              ),
+              // Кнопка Top Up
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.account_balance_wallet_outlined, size: 15, color: Colors.black87),
+                    SizedBox(width: 6),
+                    Text(
+                      'Top Up',
+                      style: TextStyle(
+                        color: Colors.black87,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTransactionItem({
+    required IconData icon,
+    required Color iconBg,
+    required Color iconColor,
+    required String title,
+    required String date,
+    required String amount,
+    required String tag,
+    required bool isOrder,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        children: [
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: iconBg,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(icon, color: iconColor, size: 22),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  date,
+                  style: const TextStyle(fontSize: 10, color: Colors.black45),
+                ),
+              ],
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                amount,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 3),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    tag,
+                    style: const TextStyle(fontSize: 10, color: Colors.black54),
+                  ),
+                  const SizedBox(width: 3),
+                  Container(
+                    width: 14,
+                    height: 14,
+                    decoration: BoxDecoration(
+                      color: isOrder ? const Color(0xFFEF4444) : const Color(0xFF2563EB),
+                      borderRadius: BorderRadius.circular(3),
+                    ),
+                    child: Icon(
+                      isOrder ? Icons.arrow_outward_rounded : Icons.arrow_downward_rounded,
+                      color: Colors.white,
+                      size: 10,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBottomNav() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(top: BorderSide(color: Colors.grey.shade200)),
+      ),
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: const [
+          _NavIcon(icon: Icons.home_outlined, label: 'Home', isActive: false),
+          _NavIcon(icon: Icons.shopping_bag_outlined, label: 'Cart', isActive: false),
+          _NavIcon(icon: Icons.receipt_long_outlined, label: 'Orders', isActive: false),
+          _NavIcon(icon: Icons.account_balance_wallet, label: 'Wallet', isActive: true),
+          _NavIcon(icon: Icons.person_outline, label: 'Profile', isActive: false),
+        ],
+      ),
+    );
+  }
+}
+
+class _NavIcon extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final bool isActive;
+
+  const _NavIcon({
+    required this.icon,
+    required this.label,
+    required this.isActive,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          icon,
+          size: 22,
+          color: isActive ? Colors.black87 : Colors.black38,
+        ),
+        const SizedBox(height: 2),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 10,
+            fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+            color: isActive ? Colors.black87 : Colors.black38,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// ==============================================================================
+// 4. СЛОЖНЫЙ МАКЕТ 2: ORGANIZER PROFILE SCREEN (ПРОФИЛЬ АЛЬБЕРТА ФЛОРЕСА)
+// ==============================================================================
+class OrganizerProfileMockup extends StatefulWidget {
+  const OrganizerProfileMockup({super.key});
+
+  @override
+  State<OrganizerProfileMockup> createState() => _OrganizerProfileMockupState();
+}
+
+class _OrganizerProfileMockupState extends State<OrganizerProfileMockup> {
+  int _activeTab = 0; // 0 = About, 1 = Events, 2 = Reviews
+
+  @override
+  Widget build(BuildContext context) {
+    const primaryBlue = Color(0xFF4361EE);
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Верхний статус-бар
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '9:41',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                  ),
+                  Row(
+                    children: [
+                      Icon(Icons.signal_cellular_alt, size: 15),
+                      SizedBox(width: 4),
+                      Icon(Icons.wifi, size: 15),
+                      SizedBox(width: 4),
+                      Icon(Icons.battery_full, size: 15),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+
+              // Шапка с кнопкой назад и опциями
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.arrow_back, color: primaryBlue, size: 22),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                  const Text(
+                    'Organizer',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFEFF2FF),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Icon(Icons.more_vert, color: primaryBlue, size: 18),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+
+              // Аватар организатора
+              Center(
+                child: Container(
+                  width: 82,
+                  height: 82,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: const Color(0xFFE2E8F0), width: 3),
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFFE0E7FF), Color(0xFFC7D2FE)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                  ),
+                  child: const Center(
+                    child: Icon(Icons.person, size: 50, color: Color(0xFF4361EE)),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              // Имя
+              const Center(
+                child: Text(
+                  'Albert Flores',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Статистика: 2.368 Followers, 346 Following, 13 Events
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: const [
+                  _ProfileStatCol(value: '2.368', label: 'Followers'),
+                  _ProfileStatCol(value: '346', label: 'Following'),
+                  _ProfileStatCol(value: '13', label: 'Events'),
+                ],
+              ),
+              const SizedBox(height: 18),
+
+              // Кнопки Follow и Messages
+              Row(
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                      height: 44,
+                      child: ElevatedButton.icon(
+                        onPressed: () {},
+                        icon: const Icon(Icons.person_add_alt_1, size: 16),
+                        label: const Text('Follow', style: TextStyle(fontWeight: FontWeight.bold)),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: primaryBlue,
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(22),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: SizedBox(
+                      height: 44,
+                      child: OutlinedButton.icon(
+                        onPressed: () {},
+                        icon: const Icon(Icons.chat_bubble_outline_rounded, size: 16),
+                        label: const Text('Messages', style: TextStyle(fontWeight: FontWeight.bold)),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: primaryBlue,
+                          side: const BorderSide(color: primaryBlue, width: 1.5),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(22),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+
+              // Вкладки: About, Events, Reviews
+              Row(
+                children: [
+                  _buildTabPill(index: 0, title: 'About', primaryBlue: primaryBlue),
+                  const SizedBox(width: 8),
+                  _buildTabPill(index: 1, title: 'Events', primaryBlue: primaryBlue),
+                  const SizedBox(width: 8),
+                  _buildTabPill(index: 2, title: 'Reviews', primaryBlue: primaryBlue),
+                ],
+              ),
+              const SizedBox(height: 16),
+
+              // Блок About
+              const Text(
+                'About',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 8),
+              RichText(
+                text: const TextSpan(
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.black54,
+                    height: 1.45,
+                  ),
+                  children: [
+                    TextSpan(
+                      text:
+                          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ',
+                    ),
+                    TextSpan(
+                      text: 'Read more...',
+                      style: TextStyle(
+                        color: primaryBlue,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTabPill({
+    required int index,
+    required String title,
+    required Color primaryBlue,
+  }) {
+    final bool isSelected = _activeTab == index;
+
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            _activeTab = index;
+          });
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 9),
+          decoration: BoxDecoration(
+            color: isSelected ? primaryBlue : Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: primaryBlue, width: 1.4),
+          ),
+          child: Center(
+            child: Text(
+              title,
+              style: TextStyle(
+                color: isSelected ? Colors.white : primaryBlue,
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ProfileStatCol extends StatelessWidget {
+  final String value;
+  final String label;
+
+  const _ProfileStatCol({
+    required this.value,
+    required this.label,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.black87,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 12,
+            color: Colors.black54,
+          ),
+        ),
+      ],
     );
   }
 }
